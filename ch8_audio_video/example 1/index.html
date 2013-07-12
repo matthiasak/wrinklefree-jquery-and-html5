@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML5 Audio example 1</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+    </head>
+    <body>
+        <audio preload="auto" controls></audio>
+    </body>
+    <script>
+        var audio;
+        $(function(){
+            var $audio = $('audio');
+            audio = $audio.get(0);
+            audio.src = "https://api.soundcloud.com/tracks/69018397/download?client_id=b45b1aa10f1ac2941910a7f0d10f8e28"
+            audio.play();
+
+            setTimeout(function(){
+                audio.pause();
+            }, 10*1000); //--> 10 seconds = 10,000 milliseconds
+
+            //--> tells us the start and end time of the buffered part of the file
+            audio.buffered;
+
+            //--> asks the browser whether the given mime type can be played
+            audio.canPlayType("audio/wav");
+        })
+    </script>
+</html>

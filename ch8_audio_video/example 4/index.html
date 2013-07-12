@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML5 Audio example 4</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+    </head>
+    <body>
+    </body>
+    <script>
+        function supportsAudio(audioType){
+            var element = document.createElement('audio');
+            var result = element.canPlayType;
+            //--> if we pass in a type, return whether or not that audio type is supported,
+            //--> else just return whether or not any audio type is supported
+            return audioType ? !!(result) : !!(result(audioType));
+        }
+        var audio = new Audio();
+        var name = "freefalling";
+        if(supportsAudio('audio/ogg; codecs="vorbis"'){
+            //--> set src to ogg file
+            audio.src = name+".ogg";
+        } else if(supportsAudio('audio/mpeg')){
+            //--> set src to mp3 file
+            audio.src = name+".mp3";
+        } else if(supportsAudio('audio/wav')){
+            //--> set src to wav file
+            audio.src = name+".wav";
+        } else if(supportsAudio('audio/m4a')){
+            //--> set src to m4a file
+            audio.src = name+".m4a";
+        } else {
+            //--> use a Flash player
+        }
+
+        if (audio.src){
+            audio.play();
+            setTimeout(function(){
+                audio.pause();
+            }, 10*1000); //--> 10 seconds = 10,000 milliseconds
+        }
+    </script>
+</html>

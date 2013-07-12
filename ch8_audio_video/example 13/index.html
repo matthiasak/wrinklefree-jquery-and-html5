@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fullscreen example 1</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+    </head>
+    <body>
+        <video poster="http://www.google.com/logos/2013/childrens_day_2013-1516005-hp.jpg">
+            <p>
+                Try this page in a compatible browser, or you can
+                <a href="#"> download the video </a>
+                instead.
+            </p>
+        </video>
+        <script>
+            var src="../movie.mp4";
+            var video;
+            $(function(){
+                var $video = $('video');
+                video = $video.get(0);
+                video.src = src;
+                video.load();
+                video.play();
+
+                $('html').on('keyup', function(e){
+                    if(e.which === 32){ //--> space bar
+                        video.requestFullScreen && video.requestFullScreen() || video.webkitRequestFullScreen && video.webkitRequestFullScreen() || video.mozRequestFullScreen && video.mozRequestFullScreen();
+                    } else if(e.which === 27){ //--> escape key
+                        document.webkitExitFullscreen && document.webkitExitFullscreen();
+                        document.mozCancelFullscreen && document.mozCancelFullscreen();
+                        document.exitFullscreen && document.exitFullscreen();
+                    }
+                })
+            })
+        </script>
+    </body>
+</html>

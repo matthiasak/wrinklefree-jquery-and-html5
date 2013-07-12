@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML5 Video example 4</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+    </head>
+    <body>
+        <video></video>
+    </body>
+    <script>
+        var video;
+        $(function(){
+            video = $('video').get(0);
+            var supportsVideo = Modernizr.video;
+            var name = "../movie";
+            if(supportsVideo){
+                if(supportsVideo.ogg){
+                    //--> set src to ogv file
+                    video.src = name+".ogv";
+                } else if(supportsVideo.webm){
+                    //--> set src to webm file
+                    video.src = name+".webm";
+                } else if(supportsVideo.h264){
+                    //--> set src to mp4 file
+                    video.src = name+".mp4";
+                }
+
+                video.play();
+                setTimeout(function(){
+                    video.pause();
+                }, 10*1000); //--> 10 seconds = 10,000 milliseconds
+            }
+        })
+    </script>
+</html>

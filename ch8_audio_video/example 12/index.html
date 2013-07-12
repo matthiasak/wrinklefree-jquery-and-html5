@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fullscreen example 1</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+        <style>
+        video{
+            -webkit-filter:url(#blur);
+            -moz-filter:url(#blur);
+            -ms-filter:url(#blur);
+            -o-filter:url(#blur);
+            filter:url(#blur);
+        }
+        </style>
+    </head>
+    <body>
+        <video poster="http://www.google.com/logos/2013/childrens_day_2013-1516005-hp.jpg">
+            <p>
+                Try this page in a compatible browser, or you can
+                <a href="#"> download the video </a>
+                instead.
+            </p>
+        </video>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="blur">
+                    <feGaussianBlur stdDeviation="4" />
+                </filter>
+            </defs>
+        </svg>
+        <script>
+            var src="../movie.mp4";
+            var video;
+            $(function(){
+                var $video = $('video');
+                video = $video.get(0);
+                video.src = src;
+                video.load();
+                video.play();
+            })
+        </script>
+    </body>
+</html>

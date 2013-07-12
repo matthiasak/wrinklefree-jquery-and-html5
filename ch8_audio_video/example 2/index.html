@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML5 Audio example 2</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+    </head>
+    <body>
+        <audio preload="auto" controls>
+            <source src="freefalling.mp3" />
+            <source src="freefalling.ogg" />
+            <source src="freefalling.wav" />
+            <!-- now include flash fall back -->
+        </audio>
+    </body>
+    <script>
+        var audio;
+        $(function(){
+            var $audio = $('audio');
+            audio = $audio.get(0);
+            audio.play();
+
+            setTimeout(function(){
+                audio.pause();
+            }, 10*1000); //--> 10 seconds = 10,000 milliseconds
+        })
+    </script>
+</html>

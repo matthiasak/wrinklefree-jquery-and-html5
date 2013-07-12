@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Example 5a - getUserMedia() Screenshot</title>
+	<script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+	<link href="styles.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<div class="ten columns offset-by-three">
+			<form class="CatForm">
+				<h3>My Video</h3>
+				<h3 class="subheader">(click video to take screenshot)</h3>
+				<hr>
+				<video id="video" style="width:100%;display:none;"></video>
+				<canvas style="display:none;"></canvas>
+			
+				<h3>Screenshot</h3>
+				<hr>
+				<img src="">
+			</form>
+		</div>
+	</div>
+	<script>
+		// code will go here.
+		$.fn.getUserMedia = function(_options){ //--> _options -> { constraints: ..., success: ..., error: ... }
+
+		var isSupported = function(){
+			return 
+				(navigator.getUserMedia
+				|| navigator.webkitGetUserMedia
+				|| navigator.mozGetUserMedia);
+		};
+
+		var takeScreenshotOfVideo = function(){
+			//--> Read in the video frame as image data to the canvas object
+			canvas[0].getContext('2d').drawImage(video[0], 0, 0);
+
+			//--> Write the canvas image data as a base64 encoded string to the image's src attribute
+			//--> This will fallback to "image/png" if webm is not supported by the browser
+			img.attr('src', canvas[0].toDataURL('image/webm'));
+		};
+
+		var init = function(){
+			if(!video || !canvas || !img || !(getMedia = isSupported()) ){
+				return;
+			}
+			navigator[getMedia.name](options.constraints, options.success, options.error);
+		};
+
+		var defaults = {
+			constraints: { video: true, audio: true },
+			success: function(stream){
+				var getMedia = isSupported();
+
+				if(getMedia && getMedia.name.match(/^(getUserMedia|webkitGetUserMedia)$/g)){
+					var ObjectURL = (window.URL || window.webkitURL).createObjectURL(stream);
+					video.attr('src', ObjectURL);
+				} else {
+					video[0].mozSrcObject = stream; //--> for Mozilla browsers
+				}
+
+				video
+					.css('display', 'block')
+					.on({
+						loadedmetadata : function(){
+							canvas.attr('width', this.videoWidth);
+							canvas.attr('height', this.videoHeight);
+							video[0].play();
+						},
+						click : function(){
+							takeScreenshotOfVideo();
+						}
+					});
+			},
+			error: function(error){
+				var error_string;
+				switch(error.code){
+					case 1: 
+						error_string = "PERMISSION_DENIED - The user denied permission to the media device required for operation.";
+						break;
+					case 2:
+						error_string = "NOT_SUPPORTED_ERROR - A constraint specified is not supported by the browser.";
+						break;
+					case 3:
+						error_string = "MANDATORY_UNSATISFIED_ERROR - No media tracks of the type specified in the constraints were found.";
+						break;
+					default:
+						error_string = error;
+				}
+				console.log("Something went wrong:", error_string);
+			}
+		};
+
+		//--> storing elements
+		var video,
+			canvas,
+			img,
+			options = $.extend(defaults, _options);
+
+		//--> build up our video, canvas, and img list
+		this.each(function(i, el){
+			el = $(el);
+			if(el.is('canvas')){
+				canvas = el;
+			} else if(el.is('video')){
+				video = el;
+			} else if(el.is('img')){
+				img = el;
+			}
+		});
+
+		init();
+	};
+
+	//--> call our plugin
+	$('video, canvas, img').getUserMedia();
+	</script>
+</body>
+</html>

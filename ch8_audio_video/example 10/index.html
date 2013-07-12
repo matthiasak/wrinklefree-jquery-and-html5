@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML5 Video example 5</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+    </head>
+    <body>
+        <video></video>
+    </body>
+    <script>
+        $(function(){
+            var $video = $('video');
+            video = $video.get(0);
+
+            function supportsVideo(videoType){
+                var element = document.createElement('video');
+                var result = element.canPlayType;
+                //--> if we pass in a type, return whether or not that video type is supported,
+                //--> else just return whether or not any video type is supported
+                return videoType ? !!(result) : !!(result(videoType));
+            }
+
+            var name = "../movie";
+            if(supportsVideo('video/ogg; codecs="theora, vorbis"')){
+                //--> set src to ogv file
+                video.src = name+".ogv";
+            } else if(supportsVideo('video/webm; codecs="vp8, vorbis"')){
+                //--> set src to mp3 file
+                video.src = name+".webm";
+            } else {
+                //--> use a Flash player
+            }
+
+            if(video.src){
+                video.play();
+            }
+        })
+    </script>
+</html>

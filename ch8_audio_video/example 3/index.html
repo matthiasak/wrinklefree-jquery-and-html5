@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML5 Audio example 3</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+    </head>
+    <body>
+    </body>
+    <script>
+        var audio;
+        $(function(){
+            //--> we can create <audio> elements programmatically, too!
+            audio = new Audio();
+            var supportsAudio = Modernizr.audio;
+            var name = "freefalling";
+            if(supportsAudio){
+                if(supportsAudio.ogg){
+                    //--> set src to ogg file
+                    audio.src = name+".ogg";
+                } else if(supportsAudio.mp3){
+                    //--> set src to mp3 file
+                    audio.src = name+".mp3";
+                } else if(supportsAudio.wav){
+                    //--> set src to wav file
+                    audio.src = name+".wav";
+                } else if(supportsAudio.m4a){
+                    //--> set src to m4a file
+                    audio.src = name+".m4a";
+                }
+
+                audio.play();
+                setTimeout(function(){
+                    audio.pause();
+                }, 10*1000); //--> 10 seconds = 10,000 milliseconds
+            }
+        })
+    </script>
+</html>

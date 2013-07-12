@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+	<link href="bootstrap.min.css" rel="stylesheet">
+	<style>
+	.messages {
+		position: relative;
+	}
+	.messages > li {
+		-webkit-transition: all 0.3s ease-in-out;
+		-moz-transition: all 0.3s ease-in-out;
+		transition: all 0.3s ease-in-out;
+
+		-webkit-transform: translateX(-50px);
+		-moz-transform: translateX(-50px);
+		transform: translateX(-50px);
+
+		opacity: 0;
+		border: 1px lightblue solid;
+		background: lightcyan;
+		padding: 1em 1em;
+		margin-bottom: 1em;
+	}
+	.messages > li.incoming {
+		-webkit-transform: translateX(50px);
+	    -moz-transform: translateX(50px);
+	    transform: translateX(50px);
+
+	    border: 1px lightcoral solid;
+	    background: lightsalmon;
+	}
+	.messages > li.show {
+		-webkit-transform: translateX(0);
+		-moz-transform: translateX(0);
+		transform: translateX(0);
+		opacity: 1;
+	}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h2>Leave a message</h2>
+		<input type="text" class="input-block-level" placeholder="What's would you like to say?">
+		<button class="btn btn-med" type="submit">Send</button>
+
+		<h4>Messages</h4>
+		<ul class="unstyled messages">
+		</ul>
+	</div>
+	<script>
+		$(function(){
+
+			var o = $({});
+			$.subscribe = function() {
+				o.on.apply(o, arguments);
+			};
+			$.unsubscribe = function() {
+				o.off.apply(o, arguments);
+			};
+			$.publish = function() {
+				o.trigger.apply(o, arguments);
+			};
+
+			$.fn.BootsChat = function(){
+				if(this.length > 1){
+					return;
+				}
+
+				var container = this.first(),
+					input = container.find('input').first(),
+					button = container.find('button'),
+					list = container.find('ul');
+
+				var addMessage = function(text){
+					if($.trim(text)){
+						var newListItem = $('<li>'+text+'</li>');
+						list.prepend(newListItem);
+						setTimeout(function(){
+							newListItem.addClass('show');
+						}, 100)
+					}
+				}
+
+				var addIncomingMessage = function(text){
+					if($.trim(text)){
+						var newListItem = $('<li>'+text+'</li>').addClass('incoming');
+						list.prepend(newListItem);
+						setTimeout(function(){
+							newListItem.addClass('show');
+						}, 100)
+					}
+				}
+
+				var addMessageFromInput = function(){
+					var text = input.val();
+					input.val('').focus();
+					addMessage(text);
+					banjo.send(text);
+				}
+
+				container.on('keyup', 'input', function(e){
+					if(e.which === 13){ //--> return was pressed
+						addMessageFromInput();
+					}
+				}).on('click', 'button', function(e){
+					addMessageFromInput();
+				});
+
+				$.subscribe('Banjo-incoming-message', function(e, message){
+					addIncomingMessage(message);
+				});
+
+				var banjo = $.Banjo();
+				banjo.connect("ws://localhost:8080");
+
+				input.focus();
+			};
+
+			$.Banjo = function(){
+				return new function(){
+					var ws;
+					var connect = function(url){
+						ws = new WebSocket(url);
+						ws.onopen = function(event){
+							send('Greetings.');
+						}
+						ws.onclose = function(event){
+							alert('Connection ended.');
+						}
+						ws.onmessage = function(event) {
+							$.publish('Banjo-incoming-message', [event.data]);
+						};
+					}
+
+					var close = function(){
+						ws.close();
+					}
+
+					var send = function(message){
+						ws.send(message);
+					}
+
+					return {
+						connect: connect,
+						send: send,
+						close: close
+					}
+				}
+			};
+
+			if(Modernizr.websockets){
+				$('.container').BootsChat();
+			} else {
+				alert("Your browser doesn't support websockets!")
+			}
+		});
+	</script>
+</body>
+</html>

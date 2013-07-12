@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML5 Video example 2</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+    </head>
+    <body>
+        <video width="640" height="360" preload="auto" poster="http://www.google.com/logos/2013/childrens_day_2013-1516005-hp.jpg">
+            <p>
+                Try this page in a compatible browser, or you can
+                <a href="#"> download the video </a>
+                instead.
+            </p>
+        </video>
+        <script>
+            var src="../movie.mp4";
+            var video;
+            $(function(){
+                var $video = $('video');
+                video = $video.get(0);
+                video.src = src;
+                video.play();
+
+                setTimeout(function(){
+                    video.pause();
+                }, 10*1000); //--> 10 seconds = 10,000 milliseconds
+            })
+        </script>
+    </body>
+</html>

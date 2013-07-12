@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<body>
+    <script>
+        // var worker = new Worker('worker.js');
+        // worker.onmessage = function(e){
+        //     console.log(e.data);
+        // }
+    </script>
+    <script type="text/js-worker">
+        //--> NOT executed
+        onmessage = function(event){
+            postMessage(event.data);
+        }
+    </script>
+    <script type="text/javascript">
+        //--> executed
+        //--> Remember the HTML5 File APIs?
+        var blob = new Blob([document.querySelector("script[type=\"text\/js-worker\"]").textContent], {type: "text/javascript"});
+        //--> Creating a new worker, and pass a base64 encoded URL with createObjectURL()
+        var worker = new Worker(window.URL.createObjectURL(blob));
+        worker.onmessage = function (event) {
+            console.log(event.data);
+        };
+        //--> And finally, start the worker!
+        window.onload = function() { worker.postMessage(""); };
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML5 Audio example 5</title>
+        <script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+    </head>
+    <body>
+        <div id="audio-div"></div>
+    </body>
+    <script>
+        //--> (1)
+        $.supportsAudio = function(audioType){
+            var element = document.createElement('audio');
+            var result = element.canPlayType;
+            //--> if we pass in a type, return whether or not that audio type is supported,
+            //--> else just return whether or not any audio type is supported
+            return audioType ? !!(result) : !!(result(audioType));
+        };
+
+        $.fn.jAudio = function(options){
+            //--> (2)
+            var defaults = {
+                src: "",
+                autoplay: false,
+                preload: "auto",
+                controls: true,
+                loop: false,
+                sources: [] //{url: ..., type: ...}
+            };
+
+            options = $.extend(defaults, options || {});
+
+            //--> (3)
+            //--> check that we have some files to load
+            if(!options.sources || !options.sources.length){
+                return;
+            }
+
+            //--> determine the file to use, if any
+            var fileTypesPossible = [{name: "audio/mpeg", type:".mp3"}, {name:"audio/wav", type:".wav"}, {name:'audio/ogg; codecs="vorbis"', type:".ogg"}, {name:"audio/m4a", type:".m4a"}];
+
+            //--> (4)
+            //--> determine which types are supported
+            var fileTypesSupported = {};
+            for(var i = 0; i < fileTypesPossible.length; i++){
+                var possibleType = fileTypesPossible[i];
+                if($.supportsAudio(possibleType.name)){
+                    fileTypesSupported[possibleType.type] = true;
+                }
+            }
+
+            //--> (5)
+            //--> determine which supported types are given in the sources list
+            var fileTypesAvailable = [];
+            for(var i = 0; i < options.sources.length; i++){
+                var source = options.sources[i];
+                if(fileTypesSupported[source.type]) {
+                    fileTypesAvailable.push(source);
+                }
+            }
+
+            //--> (6)
+            //--> check that a supported file type was provided
+            if(!fileTypesAvailable.length){
+                return;
+            }
+
+            //--> (7)
+            //--> create and inject a supported Audio object with the properties provided
+            var $this = this.first();
+            var audio = new Audio(fileTypesAvailable[0].url);
+            audio.autoplay = options.autoplay;
+            audio.preload = options.preload;
+            audio.controls = options.controls;
+            audio.loop = options.loop;
+            $this.append(audio);
+        }
+
+        $('#audio-div').jAudio({
+            sources: [{url: "https://api.soundcloud.com/tracks/69018397/download?client_id=b45b1aa10f1ac2941910a7f0d10f8e28", type:".ogg"}]
+        });
+    </script>
+</html>

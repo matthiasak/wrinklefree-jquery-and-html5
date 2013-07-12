@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width">
+
+		<link rel="stylesheet" href="../css/normalize.css">
+		<link rel="stylesheet" href="../css/main.css">
+
+		<script src="/js/webgl-utils.js"></script>
+		<script src="/js/jquery.min.js"></script>
+	</head>
+	<body>
+		<script id="2d-vertex-shader" type="x-shader/x-vertex">
+			attribute vec2 a_position;
+			uniform vec2 u_resolution;
+
+			attribute vec2 a_textureCoordinates;
+			varying vec2 v_textureCoordinates;
+
+			void main() {
+				// convert the rectangle from pixels to 0.0 to 1.0
+				vec2 zeroToOne = a_position / u_resolution;
+				// convert from 0->1 to 0->2
+				vec2 zeroToTwo = zeroToOne * 2.0;
+				// convert from 0->2 to -1->+1 (clipspace)
+				vec2 clipSpace = zeroToTwo - 1.0;
+				gl_Position = vec4(clipSpace, 0, 1);
+
+				// The GPU will interpolate this value between points behind the scenes
+				// This passes the texture coordinates to the fragment shader
+				v_textureCoordinates = a_textureCoordinates;
+			}
+		</script>
+
+		<script id="2d-fragment-shader" type="x-shader/x-fragment">
+			precision mediump float;
+
+			// our texture
+			uniform sampler2D u_image;
+
+			// the textureCoordinates passed in from the vertex shader
+			varying vec2 v_textureCoordinates;
+
+			void main() {
+				gl_FragColor = texture2D(u_image, v_textureCoordinates);
+			}
+		</script>
+
+		<script src="/demo4/ch10.js"></script>
+	</body>
+</html>

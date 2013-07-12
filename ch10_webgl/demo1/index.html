@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="../css/normalize.css">
+        <link rel="stylesheet" href="../css/main.css">
+
+        <script src="/js/webgl-utils.js"></script>
+        <script src="/js/jquery.min.js"></script>
+    </head>
+    <body>
+        <script id="2d-vertex-shader" type="x-shader/x-vertex">
+            attribute vec2 a_position;
+            uniform vec2 u_resolution;
+            void main() {
+                gl_Position = vec4(a_position, 0, 1);
+            }
+        </script>
+
+        <script id="2d-fragment-shader" type="x-shader/x-fragment">
+            void main() {
+                gl_FragColor = vec4(1, .2, .4, 1);
+            }
+        </script>
+
+        <script src="/demo1/ch10.js"></script>
+    </body>
+</html>
