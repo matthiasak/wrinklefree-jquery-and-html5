@@ -22,7 +22,7 @@
         
         // else we have geolocation support, print out something into
         // jQuery elements provided
-        this.each(function(el){
+        this.each(function(index, el){
             el.text('Hooray! We have Geolocation support! Boots the Saint Bernard will love this!');
         });
         
@@ -34,17 +34,17 @@
             
             switch(code){
                 case 1: /// PERMISSION DENIED
-                    $this.each(function(el){
+                    $this.each(function(index, el){
                         el.text(options.permission_denied);
                     });
                     break;
                 case 2: /// POSITION UNAVAILABLE
-                    $this.each(function(el){
+                    $this.each(function(index, el){
                         el.text(options.position_unavailable);
                     });
                     break;
                 case 3: /// TIMEOUT
-                    $this.each(function(el){
+                    $this.each(function(index, el){
                         el.text(options.timeout);
                     });
                     break;
@@ -61,7 +61,7 @@
                 speed = position.coords.speed,
                 timestamp = position.timestamp;
 
-            $this.each(function(el){
+            $this.each(function(index, el){
                 el.text('We have located you at ' + latitude + ', ' + longitude + ' -- ' + new Date(timestamp).toLocaleString());
             });
         }
